@@ -1,126 +1,47 @@
-'''
+import numpy as np
 
-                            Online Python Compiler.
-                Code, Compile, Run and Debug python program online.
-Write your code in this editor and press "Run" button to execute it.
-
-'''
-
-class node:
-    def __init__ (self):
-        self.N = None;
-        self.NE = None;
-        self.E = None;
-        self.SE = None;
-        self.S = None;
-        self.SW = None;
-        self.W = None;
-        self.NW = None;
-    
-    def getN (self):
-        return(self.N);
-    
-    def setN (self, newN):
-        self.N = newN;
-    
-    def getNE (self):
-        return(self.NE);
-        
-    def setNE (self, newNE):
-        self.NE = newNE;
-    
-    def getE (self):
-        return (self.E);
-
-    def setE (self, newE):
-        self.E = newE;
-    
-    def getSE (self):
-        return (self.SE);
-    
-    def setSE (self, newSE):
-        self.SE = newSE;
-
-    def getS (self):
-        return (self.S);
-    
-    def setS (self, newS):
-        self.S = newS;
-    
-    def getSW (self):
-        return (self.SW);
-
-    def setSW (self, newSW):
-        self.SW = newSW;
-    
-    def getW (self):
-        return (self.W);
-    
-    def setW (self, newW):
-        self.W = newW;    
-
-    def getNW (self):
-        return (self.NW);
-    
-    def setNW (self, newNW):
-        self.NW = newNW;
-    
-class cell (node):
-    def __init__ (self):
-        value = None;
-        candidates = [];
-    
-    def setValue (self, newValue):
-        self.value = newValue;
-
-    def getValue (self):
-        return self.value;
-    
-    def addCandidate (self, newCandidate):
-        self.candidates.append(newCandidate);
-    
-    def removeCandidate (self, delCandidate):
-        self.candidates.remove(delCandidate);
-        
-
-class grid:
-    def __init__(self, width, length):
-        self.anchor = cell();
-        buff = self.anchor;
-        for x in range(1, ((width+length)-1)):
-            buff.setE(cell());
-            buff = buff.getE();
-            
-    def getTotalNodes(self):
-        total = 0;
-        buff = self.anchor;
-        while buff.getE() != None:
-            total = total+1;
-            buff =  buff.getE();
-        return total;
-
-        
-        
-        
-        
-        
-        
-        
-x = cell();
-x.setN(1);
-x.setNE(2);
-x.setE(3);
-x.setSE(4);
-x.setS(5);
-x.setSW(6);
-x.setW(7);
-x.setNW(8);
-
-g=grid(1,1);
-print (g.getTotalNodes());
+grid = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 
+def possible(y, x, n):
+    global grid
+    for i in range(0, 9):
+        if grid[y][i] == n:
+            return False
+    for i in range(0, 9):
+        if grid[i][x] == n:
+            return False
+    x0 = (x // 3) * 3
+    y0 = (y // 3) * 3
+    for i in range(0, 3):
+        for j in range(0, 3):
+            if grid[y0 + i][x0 + j] == n:
+                return False
+    return True
 
 
-print (x.getNE());
-print("Hello World")
+def solve():
+    global grid
+    for y in range(9):
+        for x in range(9):
+            if grid[y][x] == 0:
+                for n in range(1, 10):
+                    if possible(y, x, n):
+                        grid[y][x] = n
+                        solve()
+                        grid[y][x] = 0
+                return
+    print(np.matrix(grid))
+    input("More?")
+
+
+if __name__ == '__main__':
+    solve()
